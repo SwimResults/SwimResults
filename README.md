@@ -93,3 +93,23 @@ flowchart TD
     B --> H[Angular SPA]
     B --> I[IOS App]
 ```
+
+
+### Infrastructure
+
+```mermaid
+flowchart TD
+    A[Import Service]
+    B[Athlete Service]
+    C[User Service]
+    D[Meeting Service]
+    E[Start Service]
+    
+    A --> |import events| D
+    A --> |import athletes and teams| B
+    A --> |import starts and results| E
+    C --> |users favorits| B
+    D --> |organizing team| B
+    E --> |each start has athlete| B
+    E --> |each start has meeting and event| D
+```
