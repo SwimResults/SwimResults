@@ -67,7 +67,7 @@
         <tr>
             <td>meeting-service</td>
             <td>🔗 <a href="https://github.com/SwimResults/meeting-service">Link</a></td>
-            <td>🔴</td>
+            <td>🟡</td>
             <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/meeting-service/go.yml?label=Action&logo=github&style=flat-square"></td>
         </tr>
     </tbody>
