@@ -23,6 +23,8 @@
                 <img src="https://img.shields.io/github/actions/workflow/status/swimresults/WebApplication/node.js.yml?label=Action&logo=github&style=flat-square">
                 <br>
                 <img alt="Website" src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fapp.swimresults.de">
+                <br>
+                <img alt="Weblate project translated" src="https://img.shields.io/weblate/progress/swimresults?server=https%3A%2F%2Fweblate.swimresults.de&style=flat-square">
             </td>
         </tr>
         <tr>
