@@ -63,7 +63,7 @@
         <tr>
             <td>import-service</td>
             <td>🔗 <a href="https://github.com/SwimResults/import-service">Link</a></td>
-            <td>🔴</td>
+            <td>🟡</td>
             <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/import-service/go.yml?label=Action&logo=github&style=flat-square"></td>
         </tr>
         <tr>
