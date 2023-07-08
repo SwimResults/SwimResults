@@ -28,6 +28,18 @@
             </td>
         </tr>
         <tr>
+            <td>Homepage</td>
+            <td>🔗 <a href="https://github.com/SwimResults/Homepage">Link</a></td>
+            <td>🟡</td>
+            <td>
+                <img src="https://img.shields.io/github/actions/workflow/status/swimresults/Homepage/main.yml?label=Action&logo=github&style=flat-square">
+                <br>
+                <img alt="Website" src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2F.swimresults.de">
+                <br>
+                <img alt="Weblate project translated" src="https://img.shields.io/weblate/progress/swimresults?server=https%3A%2F%2Fweblate.swimresults.de&style=flat-square">
+            </td>
+        </tr>
+        <tr>
             <td>StatusPage</td>
             <td>🔗 <a href="https://github.com/SwimResults/StatusPage">Link</a></td>
             <td>🟡</td>
