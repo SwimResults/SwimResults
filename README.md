@@ -57,7 +57,7 @@
         <tr>
             <td>athlete-service</td>
             <td>🔗 <a href="https://github.com/SwimResults/athlete-service">Link</a></td>
-            <td>🟡</td>
+            <td>🟢</td>
             <td>
                 <img src="https://img.shields.io/github/actions/workflow/status/swimresults/athlete-service/go.yml?label=Action&logo=github&style=flat-square">
             </td>
