@@ -18,7 +18,7 @@
         <tr>
             <td>WebApplication</td>
             <td>🔗 <a href="https://github.com/SwimResults/WebApplication">Link</a></td>
-            <td>🟡</td>
+            <td>🟢</td>
             <td>
                 <img src="https://img.shields.io/github/actions/workflow/status/swimresults/WebApplication/node.js.yml?label=Action&logo=github&style=flat-square">
                 <br>
