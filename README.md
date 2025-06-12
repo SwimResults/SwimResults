@@ -96,12 +96,18 @@
             <td>🟢</td>
             <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/meeting-service/go.yml?label=Action&logo=github&style=flat-square"></td>
         </tr>
+        <tr>
+            <td>admin-service</td>
+            <td>🔗 <a href="https://github.com/SwimResults/admin-service">Link</a></td>
+            <td>🟡</td>
+            <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/admin-service/go.yml?label=Action&logo=github&style=flat-square"></td>
+        </tr>
     </tbody>
 </table>
 
 **Status:**
 🟢 Done
-🟡 In Development
+🟡 Under Development
 🔴 Open
 
 
@@ -118,6 +124,7 @@ flowchart TD
     C[User Service]
     D[Meeting Service]
     E[Start Service]
+    F[Admin Service]
     
     A --> |import events| D
     A --> |import athletes and teams| B
@@ -126,4 +133,9 @@ flowchart TD
     D --> |organizing team| B
     E --> |each start has athlete| B
     E --> |each start has meeting and event| D
+    F --> |monitoring| A
+    F --> |monitoring| B
+    F --> |monitoring| C
+    F --> |monitoring| D
+    F --> |monitoring| E
 ```
