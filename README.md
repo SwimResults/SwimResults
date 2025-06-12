@@ -118,6 +118,11 @@
 ### Microservices
 
 ```mermaid
+---
+config:
+  theme: redux
+  layout: elk
+---
 flowchart TD
     A[Import Service]
     B[Athlete Service]
