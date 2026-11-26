@@ -15,3 +15,4 @@ client/DownloadPage          SwimResults/DownloadPage
 client/Livestreaming         SwimResults/Livestreaming
 infrastructure               SwimResults/infrastructure
 swimresults-api              SwimResults/swimresults-api
+swimresults-angular          SwimResults/swimresults-angular

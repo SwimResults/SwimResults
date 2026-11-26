@@ -9,7 +9,8 @@ subfolder; those folders are gitignored here. Always run git commands inside the
 ├── server/service-core   shared Go library (auth middleware, HTTP client)
 ├── client/<App>          WebApplication, iosApplication, AndroidApplication, ManagerApplication,
 │                         Homepage, DownloadPage, Livestreaming
-├── swimresults-api/      SwimResults/swimresults-api: OpenAPI specs per service (+ generated clients, planned)
+├── swimresults-api/      SwimResults/swimresults-api: OpenAPI specs + generated clients (Go, npm, SwiftPM, Maven)
+├── swimresults-angular/  SwimResults/swimresults-angular: @swimresults/angular, API layer shared by the Angular apps
 └── infrastructure/       SwimResults/infrastructure (PRIVATE): Docker Swarm stacks, deploy scripts
 ```
 

@@ -2,6 +2,7 @@
 /server/
 /client/
 /swimresults-api/
+/swimresults-angular/
 /infrastructure/
 
 # Old infra copy with inline secrets — migrated to the private infrastructure repo; never commit
