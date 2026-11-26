@@ -1,0 +1,21 @@
+# Sub-repositories: each is its own git repo (see scripts/repos.txt), never tracked here
+/server/
+/client/
+/swimresults-api/
+/infrastructure/
+
+# Old infra copy with inline secrets — migrated to the private infrastructure repo; never commit
+/infra_old/
+*.zip
+
+# Secrets / local config
+.env
+*.env
+!*.env.example
+!.env.example
+go.work
+go.work.sum
+
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,114 @@
+# Local development stack: MongoDB + all Go services built from ../server/* + a gateway that mirrors prod routing.
+#
+#   cp dev/.env.example dev/.env
+#   docker compose -f dev/docker-compose.yml up --build            # everything
+#   docker compose -f dev/docker-compose.yml up --build meeting    # one service (+ mongo)
+#
+# Gateway:  http://localhost:8090/<svc>/v1/...   (like https://api.swimresults.de/<svc>/v1/...)
+# Direct:   meeting :8089, athlete :8083, start :8087, import :8091, user :8085, admin :8093
+#           (meeting/athlete/start/import match WebApplication's environment.ts dev ports)
+# MongoDB:  localhost:27017, no auth, one database per service (like prod)
+#
+# Secrets/config: dev/.env only. Never put production values here.
+
+name: swimresults
+
+x-go-service: &go-service
+  restart: unless-stopped
+  depends_on: [mongo]
+  env_file:
+    - path: .env
+      required: false
+
+x-build: &build
+  dockerfile: ../../dev/go-service.Dockerfile
+
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+
+  gateway:
+    image: nginx:1.27-alpine
+    ports: ["8090:80"]
+    volumes: [./gateway.conf:/etc/nginx/conf.d/default.conf:ro]
+    depends_on: [meeting, athlete, start, user, import]
+
+  meeting:
+    <<: *go-service
+    build: { context: ../server/meeting-service, <<: *build }
+    hostname: meeting-service
+    ports: ["8089:8080"]
+    environment:
+      SR_MEETING_PORT: 8080
+      SR_MEETING_MONGO_HOST: mongo
+      SR_MEETING_MONGO_PORT: 27017
+      SR_MEETING_MONGO_DATABASE: meeting
+
+  athlete:
+    <<: *go-service
+    build: { context: ../server/athlete-service, <<: *build }
+    hostname: athlete-service
+    ports: ["8083:8080"]
+    environment:
+      SR_ATHLETE_PORT: 8080
+      SR_ATHLETE_MONGO_HOST: mongo
+      SR_ATHLETE_MONGO_PORT: 27017
+      SR_ATHLETE_MONGO_DATABASE: athlete
+
+  start:
+    <<: *go-service
+    build: { context: ../server/start-service, <<: *build }
+    hostname: start-service
+    ports: ["8087:8080"]
+    environment:
+      SR_START_PORT: 8080
+      SR_START_MONGO_HOST: mongo
+      SR_START_MONGO_PORT: 27017
+      SR_START_MONGO_DATABASE: start
+      SR_START_ATHLETE_URL: http://athlete-service:8080/
+      SR_START_MEETING_URL: http://meeting-service:8080/
+      SR_START_USER_URL: http://user-service:8080/
+
+  user:
+    <<: *go-service
+    build: { context: ../server/user-service, <<: *build }
+    hostname: user-service
+    ports: ["8085:8080"]
+    environment:
+      SR_USER_PORT: 8080
+      SR_USER_MONGO_HOST: mongo
+      SR_USER_MONGO_PORT: 27017
+      SR_USER_MONGO_DATABASE: user
+      SR_USER_MEETING_URL: http://meeting-service:8080/
+      SR_USER_ATHLETE_URL: http://athlete-service:8080/
+
+  import:
+    <<: *go-service
+    build: { context: ../server/import-service, <<: *build }
+    hostname: import-service
+    ports: ["8091:8080"]
+    environment:
+      SR_IMPORT_PORT: 8080
+      SR_IMPORT_MONGO_HOST: mongo
+      SR_IMPORT_MONGO_PORT: 27017
+      SR_IMPORT_MONGO_DATABASE: import
+      SR_IMPORT_START_URL: http://start-service:8080/
+      SR_IMPORT_ATHLETE_URL: http://athlete-service:8080/
+      SR_IMPORT_MEETING_URL: http://meeting-service:8080/
+
+  admin:
+    <<: *go-service
+    build: { context: ../server/admin-service, <<: *build }
+    hostname: admin-service
+    ports: ["8093:8080"]
+    profiles: [admin]   # template only so far: `--profile admin` to include
+    environment:
+      SR_ADMIN_PORT: 8080
+      SR_ADMIN_MONGO_HOST: mongo
+      SR_ADMIN_MONGO_PORT: 27017
+      SR_ADMIN_MONGO_DATABASE: admin
+
+volumes:
+  mongo-data:

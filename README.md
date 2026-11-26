@@ -62,7 +62,42 @@
             </td>
         </tr>
         <tr>
+            <td>Livestreaming</td>
+            <td>🔗 <a href="https://github.com/SwimResults/Livestreaming">Link</a></td>
+            <td>🟢</td>
+            <td>
+                <img alt="Website" src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fswimresults.github.io%2FLivestreaming%2Fsrc%2Fstream-ui%2F">
+            </td>
+        </tr>
+        <tr>
+            <td colspan=4><b>Apps</b></td>
+        </tr>
+        <tr>
+            <td>iosApplication</td>
+            <td>🔗 <a href="https://github.com/SwimResults/iosApplication">Link</a></td>
+            <td>🟢</td>
+            <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/iosApplication/ios.yml?label=Action&logo=github&style=flat-square"></td>
+        </tr>
+        <tr>
+            <td>AndroidApplication</td>
+            <td>🔗 <a href="https://github.com/SwimResults/AndroidApplication">Link</a></td>
+            <td>🟡</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ManagerApplication</td>
+            <td>🔗 <a href="https://github.com/SwimResults/ManagerApplication">Link</a></td>
+            <td>🟡</td>
+            <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/ManagerApplication/build.yml?label=Action&logo=github&style=flat-square"></td>
+        </tr>
+        <tr>
             <td colspan=4><b>Backend (Microservices)</b></td>
+        </tr>
+        <tr>
+            <td>service-core</td>
+            <td>🔗 <a href="https://github.com/SwimResults/service-core">Link</a></td>
+            <td>🟢</td>
+            <td><img src="https://img.shields.io/github/v/tag/swimresults/service-core?label=version&style=flat-square"></td>
         </tr>
         <tr>
             <td>athlete-service</td>
@@ -113,6 +148,22 @@
 
 
 
+## Workspace
+
+This repository is also the root of the SwimResults development workspace: every project above is cloned into
+`server/` or `client/` (each is its own git repo, ignored here).
+
+```sh
+git clone https://github.com/SwimResults/SwimResults.git swimresults && cd swimresults
+scripts/ws.sh clone        # clone all repos (scripts/repos.txt)
+scripts/ws.sh status       # branch / dirty state of every repo
+cp dev/.env.example dev/.env && docker compose -f dev/docker-compose.yml up --build   # local backend on :8090
+```
+
+- [docs/architecture.md](docs/architecture.md): system overview, routing, who calls whom, auth, data
+- [docs/repos.md](docs/repos.md): build/run/test commands and code layout per repo
+- [AGENTS.md](AGENTS.md): conventions for working across repos
+
 ## Infrastructure
 
 ### Microservices
@@ -134,13 +185,16 @@ flowchart TD
     A --> |import events| D
     A --> |import athletes and teams| B
     A --> |import starts and results| E
-    C --> |users favorits| B
-    D --> |organizing team| B
+    C --> |users favorites| B
+    C --> |meetings| D
     E --> |each start has athlete| B
     E --> |each start has meeting and event| D
-    F --> |monitoring| A
-    F --> |monitoring| B
-    F --> |monitoring| C
-    F --> |monitoring| D
-    F --> |monitoring| E
+    E --> |heat start notifications| C
+    F -.-> |monitoring, planned| A
+    F -.-> |monitoring, planned| B
+    F -.-> |monitoring, planned| C
+    F -.-> |monitoring, planned| D
+    F -.-> |monitoring, planned| E
 ```
+
+Arrows are direct HTTP calls via the Go clients each service exports. Details: [docs/architecture.md](docs/architecture.md).

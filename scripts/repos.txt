@@ -1,0 +1,16 @@
+# <path>  <github repo>   — cloned into the workspace by scripts/ws.sh
+server/service-core          SwimResults/service-core
+server/meeting-service       SwimResults/meeting-service
+server/athlete-service       SwimResults/athlete-service
+server/start-service         SwimResults/start-service
+server/user-service          SwimResults/user-service
+server/import-service        SwimResults/import-service
+server/admin-service         SwimResults/admin-service
+client/WebApplication        SwimResults/WebApplication
+client/iosApplication        SwimResults/iosApplication
+client/AndroidApplication    SwimResults/AndroidApplication
+client/ManagerApplication    SwimResults/ManagerApplication
+client/Homepage              SwimResults/Homepage
+client/DownloadPage          SwimResults/DownloadPage
+client/Livestreaming         SwimResults/Livestreaming
+infrastructure               SwimResults/infrastructure
