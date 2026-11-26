@@ -9,7 +9,7 @@ subfolder; those folders are gitignored here. Always run git commands inside the
 ├── server/service-core   shared Go library (auth middleware, HTTP client)
 ├── client/<App>          WebApplication, iosApplication, AndroidApplication, ManagerApplication,
 │                         Homepage, DownloadPage, Livestreaming
-├── swimresults-api/      SwimResults/swimresults-api: OpenAPI specs + generated clients (planned)
+├── swimresults-api/      SwimResults/swimresults-api: OpenAPI specs per service (+ generated clients, planned)
 └── infrastructure/       SwimResults/infrastructure (PRIVATE): Docker Swarm stacks, deploy scripts
 ```
 
@@ -30,6 +30,9 @@ Set up: `scripts/ws.sh clone` · update all: `scripts/ws.sh pull` · overview: `
 - Branches: `master` = production, `develop` = dev environment. CI pushes images on both.
 - API changes affect many consumers (see the "Who calls whom" tables). When changing a route or a model field,
   check every consumer listed there — including the implicit ones (Homepage, Livestreaming, DownloadPage).
+- **API contracts** live in `swimresults-api/specs/<svc>.yaml` and are the source of truth. When you add, remove
+  or re-permission a route in a service, update its spec too; `make check` in `swimresults-api` (and its CI,
+  daily against each service's `master`) fails on route/permission drift.
 - Go service-to-service clients live in the **target** service's `client/` package and are consumed by version
   tag; bump and tag the target, then update the consumers' `go.mod`.
 - Cross-repo changes: change and tag the provider first, then consumers, one repo/PR at a time.

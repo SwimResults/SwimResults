@@ -92,8 +92,9 @@ Internet ─► outer nginx (SSL, certificates, domain matching)            [sep
 | DownloadPage (internal) | `POST file/increment` | – | – | – | – |
 | EasyWK / ALGE | – | – | – | – | `/easywk/*`, `/alge` |
 
-Full endpoint lists per service: see each repo's controllers (`controller/*.go`, routes registered via
-`security.Route(...)`) — these will become the OpenAPI specs in `SwimResults/swimresults-api`.
+Full endpoint lists with parameters, permissions and schemas: the OpenAPI specs in
+[SwimResults/swimresults-api](https://github.com/SwimResults/swimresults-api/tree/master/specs)
+(drift-checked against the controllers).
 
 ### Service → service
 
@@ -153,7 +154,7 @@ Gravatar (Homepage), `qpdf` (import-service).
 
 ## Known contract drift (to be fixed via shared specs)
 
-- No OpenAPI anywhere; models are hand-written in Go, TypeScript (Web, Manager), Swift, Kotlin and PHP/JS (implicit).
+- OpenAPI specs exist now (swimresults-api), but all clients still use hand-written models in Go, TypeScript (Web, Manager), Swift, Kotlin and PHP/JS (implicit).
 - Go client versions differ per consumer (see table above).
 - `user-service` `NotificationClient.SendNotification` posts to `notification/import`, which isn't served.
 - iOS calls `…/user/v1//report/submit` (double slash).
