@@ -64,10 +64,14 @@ Internet ─► outer nginx (SSL, certificates, domain matching)            [sep
              ├─ status.swimresults.de    ─► web stack: StatusPage
              ├─ auth.swimresults.de      ─► Keycloak
              ├─ weblate.swimresults.de   ─► Weblate
-             └─ api.swimresults.de       ─► API nginx ─► /<svc>/v1/<route>  →  <svc>-service:8080/<route>
-                api-dev.swimresults.de   ─►   same for the development stack (images tagged :develop)
+             └─ api.swimresults.de       ─► /<svc>/v1/<route> → sr_microservice_productive_<svc>_service:8080/<route>
+                api-dev.swimresults.de   ─► /<svc>/v1/<route> → sr_microservice_development_<svc>_service:8080/<route>
 ```
 
+- The outer nginx routes the API hosts **directly** to the Swarm services; the environment is chosen by host name.
+  Routed services: athlete, start, import, user, meeting.
+- CORS allows `https://*.swimresults.de`, `http://localhost:*` and `https://swimresults.github.io` (Livestreaming).
+- SSE-friendly proxying (no buffering, 1 h timeouts) for import-service progress streams; max body 50 MB.
 - Services serve their routes **at the root** (no `/v1`); the `/<svc>/v1/` prefix is added only by the gateway.
 - Locally, `dev/docker-compose.yml` runs the same routing at `http://localhost:8090/<svc>/v1/`.
 - Branches → images → environments: `master` → `ghcr.io/swimresults/<repo>:master` → prod; `develop` → `:develop` → dev.
