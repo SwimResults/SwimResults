@@ -1,6 +1,7 @@
 # Repository cheat sheet
 
-All repos: `github.com/SwimResults/<name>`, default branch `master`, `develop` deploys to the dev environment.
+All repos: `github.com/SwimResults/<name>`, default branch `master`, `develop` deploys to the dev environment
+(exceptions: `iosManagerApplication` uses `main` only, `AndroidApplication` has only `master`).
 Paths are relative to the workspace root.
 
 ## Backend (`server/`, Go 1.24, Gin, MongoDB)
@@ -31,9 +32,10 @@ user-service `SR_APNS_URL`, `config/apns/*`, `config/fcm/private_key.json`.
 | Repo | Stack | Build / run / test | Models & API client | Auth | CI |
 |---|---|---|---|---|---|
 | `client/WebApplication` | Angular 20, Material, ngx-translate | `npm start` · `npm run build:master\|build:develop` · `npm run test:test` · `npm run lint` | `src/app/core/model/**`, `src/app/core/service/api/**` (hand-written); base URLs in `src/environments/` | angular-oauth2-oidc PKCE | node.js.yml → ghcr image (nginx) |
-| `client/iosApplication` | SwiftUI, iOS 16.4+, AppAuth, WidgetKit/ActivityKit | `xcodebuild -scheme SwimResults -project SwimResults.xcodeproj -destination 'platform=iOS Simulator,name=…' test` | `SwimResults/Code/Features/**/Models`, `Code/Utilities/{ApiActions,Services}.swift` | AppAuth PKCE, Keychain | ios.yml (build + test) |
-| `client/AndroidApplication` | Kotlin, Compose, Retrofit/Gson, AppAuth, FCM | Android Studio (Gradle wrapper scripts missing) · `assembleDebug`, `test` | `app/src/main/java/de/swimresults/swimresults/data/{network,model}` | AppAuth PKCE | none |
-| `client/ManagerApplication` | Electron 35 + Angular 20 | `npm run build` then `npm start` · `npm run make-win32` | `src/app/core/{model,service}` (ALGE only) | none (meeting password) | build.yml → Windows release on `v*` tags |
+| `client/iosApplication` | SwiftUI, iOS 16.4+, AppAuth, WidgetKit/ActivityKit; public app | `xcodebuild -scheme SwimResults -project SwimResults.xcodeproj -destination 'platform=iOS Simulator,name=…' test` | generated `swimresults-api` Swift clients; typealiases in `SwimResults/Code/Features/**/Models`, clients in `Code/Utilities/ApiActions.swift` | AppAuth PKCE (`ios-pkce-client`, `swimresults://`), Keychain | ios.yml (build + test) |
+| `client/iosManagerApplication` | SwiftUI, iOS 26+, AppAuth; organizer tool (imports, heat times, deleting heats/starts, event visibility) | `xcodebuild -scheme SwimResultsManager -project SwimResultsManager.xcodeproj -destination 'platform=iOS Simulator,name=…' build` (no tests) | generated `swimresults-api` Swift clients; `SwimResultsManager/<Feature>/{Models,Services}`, `Core/Networking/ApiEnvironment.swift` | AppAuth PKCE (`ios-pkce-client`, own scheme `de.logilutions.swimresultsmanager://`), Keychain | none |
+| `client/AndroidApplication` | Kotlin, Compose, Retrofit/Gson, AppAuth, FCM | Android Studio (Gradle wrapper scripts missing) · `assembleDebug`, `test` | generated `de.swimresults:swimresults-api` (Maven); typealiases in `app/src/main/java/de/swimresults/swimresults/data/model`, clients in `data/network/{NetworkModule,SwimResultsApis}.kt` | AppAuth PKCE | none |
+| `client/ManagerApplication` | Electron 35 + Angular 20; desktop tool for ALGE live timing and imports | `npm run build` then `npm start` · `npm run make-win32` | `@swimresults/angular` services and models; app-only code in `src/app/core/{model,service}` | angular-oauth2-oidc PKCE (`swimresults-pkce-client`) | build.yml → Windows release on `v*` tags |
 | `client/Homepage` | PHP 8.5 / Apache, MySQL | `docker compose up` (port 4300) | `src/php/helper/client_*.php` (assoc arrays) | none | main.yml → ghcr image |
 | `client/DownloadPage` | PHP 8.5 / Apache | `docker build .` | inline in `src/index.php` | none | main.yml → ghcr image |
 | `client/Livestreaming` | static HTML/jQuery (OBS overlays) | open `src/stream-ui/index.html` | `src/stream-ui/js/{api,models}.js` | none | GitHub Pages, no CI |

@@ -79,6 +79,12 @@
             <td><img src="https://img.shields.io/github/actions/workflow/status/swimresults/iosApplication/ios.yml?label=Action&logo=github&style=flat-square"></td>
         </tr>
         <tr>
+            <td>iosManagerApplication</td>
+            <td>🔗 <a href="https://github.com/SwimResults/iosManagerApplication">Link</a></td>
+            <td>🟡</td>
+            <td></td>
+        </tr>
+        <tr>
             <td>AndroidApplication</td>
             <td>🔗 <a href="https://github.com/SwimResults/AndroidApplication">Link</a></td>
             <td>🟡</td>

@@ -10,6 +10,7 @@ flowchart LR
   subgraph Clients
     WEB[WebApplication<br/>app.swimresults.de]
     IOS[iosApplication]
+    IOSM[iosManagerApplication<br/>organizer tool]
     AND[AndroidApplication]
     MGR[ManagerApplication<br/>Electron, ALGE timing]
     LIVE[Livestreaming<br/>OBS overlays, GitHub Pages]
@@ -35,9 +36,10 @@ flowchart LR
 
   WEB --> MEET & ATH & START & USER & IMP
   IOS --> MEET & ATH & START & USER
+  IOSM --> MEET & START & IMP
   AND --> MEET & ATH & START & USER
   LIVE --> MEET & START
-  MGR --> IMP
+  MGR --> MEET & START & USER & IMP
   TIM --> IMP
   HP -->|internal| MEET & ATH & START
   HP --> MYSQL
@@ -50,7 +52,7 @@ flowchart LR
   USER --> PUSH
   IMP --> OAI
 
-  WEB & IOS & AND -.OIDC PKCE.-> KC
+  WEB & IOS & IOSM & AND & MGR -.OIDC PKCE.-> KC
   MEET & ATH & START & USER & IMP --> MONGO
 ```
 
@@ -85,8 +87,9 @@ Internet ─► outer nginx (SSL, certificates, domain matching)            [sep
 |---|---|---|---|---|---|
 | WebApplication | meetings, events (+parts, livetiming, certification), files, incidents | athletes, teams, certificates, amounts | starts, results, heats (current, event_list, info), `POST heat/:id/time` | user, follow/me, dashboards, `notification/meet/:m`, reports | `easywk/v3`, `file`, `pdf_to_text` |
 | iosApplication | meetings, events (+parts), incidents | athletes, teams, certificates, `POST athlete/meet/:m/id_list` | starts, results, heats | user, follow/me, notification_user (register APNs), report | – |
+| iosManagerApplication | meetings, events, `POST event/meet/:m/event/:n/certification` | – | heats by event, `POST heat/:id/time`, `POST heat/meet/:m/events/start_estimation_date`, `DELETE heat\|start/meet/:m/event/:e` | – | `file`, `pdf_to_text` |
 | AndroidApplication | meetings, events (+parts), incidents | athletes, teams (+search) | starts, results, heats | user, follow/me, notification_user (register FCM), report | – |
-| ManagerApplication | – | – | – | – | `POST alge` (ALGE live timing) |
+| ManagerApplication | meetings, events, files, incidents | – | starts, heats | user (me) | `alge` (ALGE live timing), `file` + SSE progress |
 | Livestreaming | `event/meet/:m/event/:n` | – | `start/meet/:m/current`, `heat/meet/:m/current`, `heat/meet/:m/event/:e/info` | – | – |
 | Homepage (internal) | `GET meeting` | `GET athlete/amount` | `GET start/amount` | – | – |
 | DownloadPage (internal) | `POST file/increment` | – | – | – | – |
@@ -123,7 +126,9 @@ Gravatar (Homepage), `qpdf` (import-service).
 ## Auth model
 
 - **Keycloak** realm `swimresults` at `https://auth.swimresults.de/realms/swimresults`.
-  Public PKCE clients: `swimresults-pkce-client` (web), `ios-pkce-client`, `android-pkce-client`. ManagerApplication: no OIDC yet.
+  Public PKCE clients: `swimresults-pkce-client` (web and the Electron ManagerApplication), `ios-pkce-client` (both iOS
+  apps; redirects `swimresults://oauth2redirect/keycloak-provider` and
+  `de.logilutions.swimresultsmanager://oauth2redirect/keycloak-provider`), `android-pkce-client`.
 - **Services** (via `service-core/security`): RS256 JWT verified against a static realm public key
   (`SR_JWT_PUBLIC_KEY`, fallback `SR_KEYCLOAK_PUBLIC_KEY`). Permission levels per route:
   `public` · `admin` (realm role `admin`) · `manager` (role `manager` or admin, any meeting) ·
@@ -154,10 +159,13 @@ Gravatar (Homepage), `qpdf` (import-service).
 
 ## Known contract drift (to be fixed via shared specs)
 
-- OpenAPI specs exist now (swimresults-api), but all clients still use hand-written models in Go, TypeScript (Web, Manager), Swift, Kotlin and PHP/JS (implicit).
+- Generated clients from swimresults-api replace the hand-written models in the Go services, Web and
+  ManagerApplication (via `@swimresults/angular`), both iOS apps and Android. Some of these migrations are still open
+  PRs. Homepage, DownloadPage and Livestreaming still use implicit, hand-written models.
 - Go client versions differ per consumer (see table above).
 - `user-service` `NotificationClient.SendNotification` posts to `notification/import`, which isn't served.
-- iOS calls `…/user/v1//report/submit` (double slash).
+- start-service `POST heat/:id/time` uses the `meeting` permission but has no meeting id in path, query or body.
+  The check therefore always fails for managers, and only admins can edit heat times (WebApplication, iosManagerApplication).
 - WebApplication dev JWT interceptor only matches `localhost:8090`; its direct-port dev URLs get no token (use the local gateway).
 - Livestreaming relies on fields such as `results[].result_type` values `livetiming_result`/`registration`,
   `heat.start_at/finished_at`, `event.style.name`, `event.final.is_final`; Homepage relies on `athlete/amount` and

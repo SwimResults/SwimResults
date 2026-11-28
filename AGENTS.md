@@ -7,8 +7,8 @@ subfolder; those folders are gitignored here. Always run git commands inside the
 ./                        SwimResults/SwimResults (this repo, public): docs, local dev stack, workspace scripts
 ├── server/<svc>-service  Go microservices (meeting, athlete, start, user, import, admin)
 ├── server/service-core   shared Go library (auth middleware, HTTP client)
-├── client/<App>          WebApplication, iosApplication, AndroidApplication, ManagerApplication,
-│                         Homepage, DownloadPage, Livestreaming
+├── client/<App>          WebApplication, iosApplication, iosManagerApplication, AndroidApplication,
+│                         ManagerApplication, Homepage, DownloadPage, Livestreaming
 ├── swimresults-api/      SwimResults/swimresults-api: OpenAPI specs + generated clients (Go, npm, SwiftPM, Maven)
 ├── swimresults-angular/  SwimResults/swimresults-angular: @swimresults/angular, API layer shared by the Angular apps
 └── infrastructure/       SwimResults/infrastructure (PRIVATE): Docker Swarm stacks, deploy scripts
@@ -28,7 +28,9 @@ Set up: `scripts/ws.sh clone` · update all: `scripts/ws.sh pull` · overview: `
 - **Secrets never go into any repo** — not this one, not service repos, not the private infrastructure repo.
   Use `.env` files (gitignored) and commit `*.env.example` with empty values.
 - **Commits** use the repository owner's own git identity. Do not add AI co-author/attribution trailers.
-- Branches: `master` = production, `develop` = dev environment. CI pushes images on both.
+- Branches: `master` = production, `develop` = dev environment. CI pushes images on both. Exceptions:
+  `iosManagerApplication` has only `main`, and `AndroidApplication` has only `master`.
+- Each app repo has its own `AGENTS.md` (where one exists). Read it before changing that repo.
 - API changes affect many consumers (see the "Who calls whom" tables). When changing a route or a model field,
   check every consumer listed there — including the implicit ones (Homepage, Livestreaming, DownloadPage).
 - **API contracts** live in `swimresults-api/specs/<svc>.yaml` and are the source of truth. When you add, remove

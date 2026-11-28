@@ -8,6 +8,7 @@ server/import-service        SwimResults/import-service
 server/admin-service         SwimResults/admin-service
 client/WebApplication        SwimResults/WebApplication
 client/iosApplication        SwimResults/iosApplication
+client/iosManagerApplication SwimResults/iosManagerApplication
 client/AndroidApplication    SwimResults/AndroidApplication
 client/ManagerApplication    SwimResults/ManagerApplication
 client/Homepage              SwimResults/Homepage
